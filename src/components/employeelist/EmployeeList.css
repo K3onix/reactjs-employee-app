@@ -1,0 +1,42 @@
+.employee-list-header {
+    font-size: 50px;
+    font-weight: 400;
+}
+
+.employee-profile {
+    width: 60%;
+    margin-left: 20%;
+}
+
+.employee-profile th, .employee-profile td {
+    border-bottom: 1px solid #ddd;
+    height: 100px;
+    width: 50%;
+}
+
+.employee-profile .hover-row:hover{
+    color: #20232A;
+    cursor: pointer;
+    text-shadow: 1px 1px #61DAFB;
+}
+
+.employee-info {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: inline-block;
+    margin-left: 50px;
+}
+
+.employee-name {
+    font-size: 25px;
+    font-weight: 300;
+}
+
+.employee-mail {
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.employee-image {
+    width: 120px;
+}

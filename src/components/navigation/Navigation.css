@@ -1,0 +1,40 @@
+body {
+    font-family: Segoe UI, sans-serif;
+}
+
+.navigation-bar {
+    width: 100%;
+}
+
+.navigation-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 75px;
+    background-color: #20232A;
+}
+
+.navigation-bar li {
+    float: left;
+    
+}
+
+.navigation-bar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 300;
+}
+
+.navigation-bar li a:hover {
+    color: #61DAFB;
+    cursor: pointer;
+}
+
+.navigation-bar li:last-child {
+    float: right;
+}
