@@ -1,0 +1,49 @@
+.home-header {
+    padding-top: 100px;
+    padding-bottom: 50px;
+    height: 300px;
+    text-align: center;
+    background-color: #282C34;
+    color: white;
+}
+
+.heading {
+    font-size: 60px;
+    font-weight: bold;
+    color: #61DAFB;
+}
+
+.heading-description {
+    font-size: 30px;
+    font-weight: 200;
+}
+
+.home-content {
+    display: inline-block;
+}
+
+.column {
+    float: left;
+    width: 30%;
+    margin-left: 2.5%;
+    margin-top: 50px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.content {
+    font-size: 18px;
+    font-weight: 300;
+    text-align: justify;
+}
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+    .column {
+      width: 100%;
+    }
+  }

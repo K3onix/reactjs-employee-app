@@ -28,6 +28,8 @@ body {
     text-decoration: none;
     font-size: 25px;
     font-weight: 300;
+    -webkit-transition-duration: 0.2s; /* Safari */
+    transition-duration: 0.2s;
 }
 
 .navigation-bar li a:hover {

@@ -1,0 +1,78 @@
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+input[type=submit] {
+    margin-right: 10px;
+    width: 20%;
+    font-size: 18px;
+    background-color: #20232A;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.2s; /* Safari */
+    transition-duration: 0.2s;
+    float: left;
+  }
+
+button[type=reset] {
+    margin-left: 10px;
+    width: 20%;
+    font-size: 18px;
+    background-color: #20232A;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.2s; /* Safari */
+    transition-duration: 0.2s;
+    float: left;
+}
+
+button[type=delete] {
+  margin-left: 10px;
+  font-size: 18px;
+  background-color: rgb(250, 60, 76);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.2s; /* Safari */
+  transition-duration: 0.2s;
+  float: right;
+}
+  
+input[type=submit]:hover, button[type=reset]:hover, button[type=delete]:hover {
+    opacity: 0.8;
+  }
+
+input[type=submit]:disabled {
+      color: darkgray;
+      background-color: lightgray;
+      cursor: auto;
+  }
+
+  label {
+      font-size: 25px;
+      font-weight: 200;
+  }
+  
+.employee-container {
+    width: 50%;
+    height: 350px;
+    margin-top: 50px;
+    margin-left: 25%;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
