@@ -1,4 +1,4 @@
-input[type=text], select {
+input[type=text], input[type=password], select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -6,6 +6,7 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 30px;
   }
   
 input[type=submit] {
@@ -69,7 +70,7 @@ input[type=submit]:disabled {
   
 .employee-container {
     width: 50%;
-    height: 350px;
+    height: 650px;
     margin-top: 50px;
     margin-left: 25%;
     border-radius: 5px;

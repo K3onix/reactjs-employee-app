@@ -10,34 +10,88 @@ import VersionView from './components/version/Version';
 import EmployeeDetails from './components/employeelist/employee-details/EmployeeDetails';
 import LogIn from './components/authentify/LogIn';
 import LogOut from './components/authentify/LogOut';
+import Register from './components/authentify/Register';
+import roles from './utils/Roles';
+import UserProfile from './components/user/User';
 
-// const testData = [
-//   {id: 0, firstName: "Max", lastName:"Mustermann", emailId: "example@mail.to"},
-//   {id: 1, firstName: "Peter", lastName:"Mustermann", emailId: "example@testmail.to"},
-//   {id: 2, firstName: "Franziska", lastName:"Uebung", emailId: "no@mail.specified"},
-//   {id: 3, firstName: "Scarlet", lastName: "Example", emailId: "nana@na.de"},
-// ];
+
 const appVersion = "0.2";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {isLoggedIn: false};
-
-    this.validateLogin = this.validateLogin.bind(this);
+    this.state = {
+      activeUser: {
+        username: localStorage.getItem('username') || null,
+        firstName: localStorage.getItem('firstName') || null,
+        lastName: localStorage.getItem('lastName') || null,
+        emailId: localStorage.getItem('emailId') || null,
+        app_metadata: {
+          token: localStorage.getItem('token') || null,
+          role: parseInt(localStorage.getItem('role')) || roles.ANONYMOUS}},
+        isLoggedIn: localStorage.getItem('loggedIn') || false};
+    
+    this.saveUserToStorage = this.saveUserToStorage.bind(this);
+    this.setCurrentUser = this.setCurrentUser.bind(this);
     this.logOut = this.logOut.bind(this);
   }
 
-  validateLogin(usrn, pswd) {
-    if (usrn === 'admin' && pswd === 'admin'){
-      this.setState({isLoggedIn: true});
-      return true;
-    }
-    return false;
+  saveUserToStorage(currentUser) {
+    localStorage.setItem('username', currentUser.username);
+    localStorage.setItem('firstName', currentUser.firstName);
+    localStorage.setItem('lastName', currentUser.lastName);
+    localStorage.setItem('emailId', currentUser.emailId);
+    localStorage.setItem('token', currentUser.token);
+    localStorage.setItem('role', currentUser.role);
+    localStorage.setItem('loggedIn', this.state.isLoggedIn);
+
+    console.log("Saved account: " + currentUser.username);
+  }
+
+  deleteUserFromStorage() {
+    const user = localStorage.getItem('username');
+
+    localStorage.removeItem('username');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('emailId');
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('loggedIn');
+
+    console.log("Deleted account: " + user);
+  }
+
+  setCurrentUser(user) {
+    this.setState({
+      activeUser: {
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailId: user.emailId,
+        app_metadata: {
+          token: user.token,
+          role: user.role,
+        }
+
+      },
+      isLoggedIn: true
+    });
+    this.saveUserToStorage(user);
   }
 
   logOut() {
-    this.setState({isLoggedIn: false})
+    this.setState({
+      activeUser: {
+        username: null,
+        firstName: null,
+        lastName: null,
+        emailId: null,
+        app_metadata: {
+          role: 0}},
+      isLoggedIn: false
+    })
+    this.deleteUserFromStorage();
   }
 
   render() {
@@ -45,15 +99,17 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <div>
-            <Navigation version={appVersion} isLoggedIn={this.state.isLoggedIn}/>
+            <Navigation version={appVersion} isLoggedIn={this.state.isLoggedIn} userName={this.state.activeUser.firstName}/>
             <Switch>
               <Route path="/" component={Home} exact/>
-              {this.state.isLoggedIn ? <Route path="/employees" component={EmployeeList} />: null}
-              {this.state.isLoggedIn ? <Route path="/employee/:id" component={EmployeeDetails} exact /> : null }
+              {this.state.isLoggedIn && this.state.activeUser.app_metadata.role >= roles.USER ? <Route path="/employees" render={(props) => <EmployeeList {...props} user={this.state.activeUser} userRole={this.state.activeUser.app_metadata.role} />} exact />: null}
+              {this.state.isLoggedIn && this.state.activeUser.app_metadata.role >= roles.MODERATOR ? <Route path="/employees/:id" render={(props) => <EmployeeDetails {...props} userToken={this.state.activeUser.app_metadata.token}/>} exact /> : null }
               <Route path="/about" component={About}/>
               <Route path="/version" render={(props) => <VersionView {...props} version={appVersion} />} />
-              <Route path="/login" render={(props) => <LogIn {...props} logIn={this.validateLogin} />} />
-              {this.state.isLoggedIn ? <Route path="/logout" render={(props) => <LogOut {...props} logOut={this.logOut} />} /> : null }
+              {this.state.isLoggedIn ? <Route path="/user" render={() => <UserProfile user={this.state.activeUser}/>} /> : null }
+              <Route path="/login" render={(props) => <LogIn {...props} appSignIn={this.setCurrentUser} />} />
+              <Route path="/register" render={(props) => <Register {...props} createUser={this.createUser} />} />
+              <Route path="/logout" render={(props) => <LogOut {...props} logOut={this.logOut} />} />
               <Route component={NoWebsiteError}/>
             </Switch>
           </div>

@@ -11,9 +11,11 @@ class EmployeeDetails extends Component {
 
         this.state = {
             pageTitle: pageTitle,
+            username: '',
             firstName: '',
             lastName: '',
-            email: ''
+            email: '',
+            password: '',
         };
         
         this.handleChange = this.handleChange.bind(this);
@@ -27,13 +29,21 @@ class EmployeeDetails extends Component {
     }
 
     getEmployee(employeeId) {
-        fetch(apiAddress + "/" + employeeId).then((result) => {
+        fetch(apiAddress + "/" + employeeId, {
+            method: 'GET',
+            mode: 'cors',
+            headers: new Headers({
+              'Authorization': this.props.userToken
+            })
+        }).then((result) => {
             return result.json();
           }).then((jsonResult) => {
             this.setState({
-                firstName: jsonResult.firstName,
-                lastName: jsonResult.lastName,
-                email: jsonResult.emailId
+                username: jsonResult.username || "Placeholder",
+                firstName: jsonResult.firstName || "Placeholder",
+                lastName: jsonResult.lastName || "Placeholder",
+                email: jsonResult.emailId || "Placeholder",
+                password: jsonResult.password || "Placeholder",
             });
           });
     }
@@ -46,46 +56,21 @@ class EmployeeDetails extends Component {
         });
     }
 
-    // async handleSubmit(event) {
-    //     const apiEndPoint = this.props.match.params.id === 'new' ? apiAddress : apiAddress + '/' + this.props.match.params.id;
-    //     const apiMethod = this.props.match.params.id === 'new' ? 'POST' : 'PUT';
-    //     const response = await fetch(
-    //         apiEndPoint, {
-    //             method: apiMethod,
-    //             headers: {
-    //                 'Accept': 'application/json',
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 firstName: this.state.firstName,
-    //                 lastName: this.state.lastName,
-    //                 emailId: this.state.email,
-    //                 })
-    //             }
-    //     );
-    //     if (!response.ok) {
-    //         alert("An error occurred while saving the employee!");
-    //     }
-    //     else {
-    //         this.props.history.push("/employees");
-    //     }
-    //     event.preventDefault();
-    // }
-
     handleSubmit(event) {
         const apiEndPoint = this.props.match.params.id === 'new' ? apiAddress : apiAddress + '/' + this.props.match.params.id;
         const apiMethod = this.props.match.params.id === 'new' ? 'POST' : 'PUT';
         
         fetch(apiEndPoint, {
             method: apiMethod,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+            mode: 'cors',
+            headers: new Headers({
+                'Authorization': this.props.userToken
+              }),
             body: JSON.stringify({
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 emailId: this.state.email,
+                //password: this.state.password
                 })
             }).then((response) => {
                 if (!response.ok) {
@@ -102,7 +87,11 @@ class EmployeeDetails extends Component {
     handleDelete(event) {
         const apiEndPoint = apiAddress + '/' + this.props.match.params.id;
         fetch(apiEndPoint, {
-            method: 'DELETE'}).then((response) => {
+            method: 'DELETE',
+            headers: new Headers({
+              'Authorization': this.props.userToken
+            })
+        }).then((response) => {
                 if (!response.ok) {
                     alert("An error occurred while deleting the employee!");
                 }
@@ -115,23 +104,29 @@ class EmployeeDetails extends Component {
     }
 
     render() {
-        const { firstName, lastName, email } = this.state;
-        const formValid = firstName.length > 0 && lastName.length > 0 && email.length > 0;
+        const { username, firstName, lastName, email, password } = this.state;
+        const formValid = username.length > 0 && firstName.length > 0 && lastName.length > 0 && email.length > 0 && password.length > 0;
         return (
             
             <div>
                 <p className="content-heading">{this.state.pageTitle}</p>
                 <div className="employee-container">
                     <form onSubmit={this.handleSubmit}>
-                        <label>First name:
+                        <label>Username:
+                            <input type="text" value={this.state.username} name="username" onChange={this.handleChange} required/>
+                        </label> <br />
+                        <label>Firstname:
                             <input type="text" value={this.state.firstName} name="firstName" onChange={this.handleChange} required/>
                         </label> <br />
-                        <label>Last name:
+                        <label>Lastname:
                             <input type="text" value={this.state.lastName} name="lastName" onChange={this.handleChange} required/>
                         </label><br />
                         <label>E-Mail:
                             <input type="text" value={this.state.email} name="email" onChange={this.handleChange} required/>
-                        </label><br /><br />
+                        </label><br />
+                        <label>Password:
+                            <input type="password" value={this.state.password} name="password" onChange={this.handleChange} required/>
+                        </label> <br /><br />
                         <input type="submit" value="Save" disabled={!formValid}/>
                         <button type="reset" onClick={this.props.history.goBack}>Cancel</button>
                         {this.props.match.params.id !== 'new' ? <button type="delete" onClick={this.handleDelete}>Delete</button> : null}

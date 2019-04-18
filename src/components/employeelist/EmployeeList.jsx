@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import './EmployeeList.css';
+import roles from '../../utils/Roles';
 
 const apiPath = "http://localhost:8080/api/v1/employees";
 
 class EmployeeCard extends Component {
   handleClicked(employeeId) {
-    this.props.history.push("/employee/"+employeeId);
+
+    if (this.props.userRole < roles.MODERATOR) {
+      return;
+    }
+    this.props.history.push("/employees/"+employeeId);
   }
 
   render() {
@@ -33,17 +38,25 @@ class EmployeeList extends Component {
   }
 
   getAllEmployees() {
-    fetch(apiPath).then((result) => {
-      return result.json();
-    }).then((jsonResult) => {
-      this.setState({employees: jsonResult});
+    fetch(apiPath, {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': this.props.user.app_metadata.token
+      })
+    }).then((response) => {
+      if (!response.ok) { throw response }
+      return response.json();
+    }).then((json) => {
+      this.setState({employees: json});
+    }).catch((error) => {
+      console.log(error);
     });
   }
 
   render() {
     return (
       <div className="employee-overview">
-        <Link to="/employee/new"><button className="add-employee">Add Employee</button></Link>
+        {this.props.userRole === roles.ADMINISTRATOR ? <Link to="/employees/new"><button className="add-employee">Add Employee</button></Link> : null}
         <table className="employee-profile">
           <thead>
           <tr>
@@ -52,7 +65,7 @@ class EmployeeList extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.employees.map(employee =>  <EmployeeCard key={employee.id} {...employee} history={this.props.history}/> )}
+            {this.state.employees.map(employee =>  <EmployeeCard key={employee.id} {...employee} history={this.props.history} userRole={this.props.userRole}/> )}
           </tbody>
         </table>
         

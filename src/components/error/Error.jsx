@@ -6,8 +6,8 @@ class NoWebsiteError extends Component {
   render() {
     return (
         <div>
-            <p className="content-heading">Sorry,</p>
-            <p className="content-body">This website does not exist. :(</p>
+            <p className="content-heading">Sorry. :(</p>
+            <p className="content-body">This website does not exist.</p>
         </div>
     );
   }

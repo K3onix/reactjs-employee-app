@@ -1,0 +1,22 @@
+.userData {
+    margin-left: 25%;
+    width: 50%;
+}
+
+.userProfile {
+    margin: 0;
+    list-style: none;
+    text-align: left;
+}
+
+.userProfile li {
+    border-bottom: 1px solid lightgrey; 
+    padding: 20px;
+}
+.userListTag {
+    font-weight: bold;
+}
+
+.userListValue {
+    float: right;
+}

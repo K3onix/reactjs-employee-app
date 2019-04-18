@@ -40,3 +40,13 @@ body {
 .navigation-bar li:last-child {
     float: right;
 }
+
+@media screen and (max-width : 760px){
+    .navigation-bar ul {
+        display: inline;
+    }
+
+    .navigation-bar li:last-child {
+        float: left;
+    }
+}
