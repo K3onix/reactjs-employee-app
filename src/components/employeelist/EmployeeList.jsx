@@ -8,7 +8,7 @@ const apiPath = "http://localhost:8080/api/v1/employees";
 class EmployeeCard extends Component {
   handleClicked(employeeId) {
 
-    if (this.props.userRole < roles.MODERATOR) {
+    if (this.props.userRole !== roles.ADMINISTRATOR && this.props.userRole !== roles.MODERATOR) {
       return;
     }
     this.props.history.push("/employees/"+employeeId);

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
 import './LogIn.css';
+import roles from '../../utils/Roles';
 
 const apiPath = "http://localhost:8080/api/v1/employees";
 
@@ -31,6 +32,7 @@ class Register extends Component {
     fetch(apiPath,
     {
       method: 'POST',
+      mode: 'cors',
       headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -41,6 +43,7 @@ class Register extends Component {
           lastName: lastName,
           emailId: mail,
           password: pswd,
+          userRole: roles.USER,
           })
       }).then((response) => {
         if(!response.ok) {

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './EmployeeDetails.css'
+import roles from '../../../utils/Roles';
 
 const apiAddress = 'http://localhost:8080/api/v1/employees';
 
@@ -11,7 +12,9 @@ class EmployeeDetails extends Component {
 
         this.state = {
             pageTitle: pageTitle,
+            existingUser: props.match.params.id !== 'new' ? true : false,
             username: '',
+            userRole: '',
             firstName: '',
             lastName: '',
             email: '',
@@ -39,11 +42,12 @@ class EmployeeDetails extends Component {
             return result.json();
           }).then((jsonResult) => {
             this.setState({
-                username: jsonResult.username || "Placeholder",
+                username: jsonResult.userName || "Placeholder",
                 firstName: jsonResult.firstName || "Placeholder",
                 lastName: jsonResult.lastName || "Placeholder",
                 email: jsonResult.emailId || "Placeholder",
-                password: jsonResult.password || "Placeholder",
+                password: '',
+                userRole: jsonResult.userRole,
             });
           });
     }
@@ -64,13 +68,18 @@ class EmployeeDetails extends Component {
             method: apiMethod,
             mode: 'cors',
             headers: new Headers({
-                'Authorization': this.props.userToken
+                'Authorization': this.props.userToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
               }),
             body: JSON.stringify({
+                id: 10,
+                userName: this.state.username,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 emailId: this.state.email,
-                //password: this.state.password
+                password: this.state.password,
+                userRole: this.state.userRole
                 })
             }).then((response) => {
                 if (!response.ok) {
@@ -104,17 +113,25 @@ class EmployeeDetails extends Component {
     }
 
     render() {
-        const { username, firstName, lastName, email, password } = this.state;
-        const formValid = username.length > 0 && firstName.length > 0 && lastName.length > 0 && email.length > 0 && password.length > 0;
+        const { username, firstName, lastName, email } = this.state;
+        const formValid = username.length > 0 && firstName.length > 0 && lastName.length > 0 && email.length > 0;
         return (
             
             <div>
                 <p className="content-heading">{this.state.pageTitle}</p>
-                <div className="employee-container">
+                <div className="employee-container" style={{ height: this.props.userRole === roles.ADMINISTRATOR ? "760px" : "650px"}}>
                     <form onSubmit={this.handleSubmit}>
                         <label>Username:
-                            <input type="text" value={this.state.username} name="username" onChange={this.handleChange} required/>
-                        </label> <br />
+                            <input type="text" value={this.state.username} name="username" onChange={this.handleChange} required disabled={this.state.existingUser}/>
+                        </label>
+                        {this.props.userRole === roles.ADMINISTRATOR ? <label >Role:
+                            <select name="userRole" value={this.state.userRole} onChange={this.handleChange}>
+                                <option value="USER">User</option>
+                                <option value="MODERATOR">Moderator</option>
+                                <option value="ADMINISTRATOR">Administrator</option>
+                            </select>
+                        </label> : null}
+                        <br />
                         <label>Firstname:
                             <input type="text" value={this.state.firstName} name="firstName" onChange={this.handleChange} required/>
                         </label> <br />
@@ -124,8 +141,8 @@ class EmployeeDetails extends Component {
                         <label>E-Mail:
                             <input type="text" value={this.state.email} name="email" onChange={this.handleChange} required/>
                         </label><br />
-                        <label>Password:
-                            <input type="password" value={this.state.password} name="password" onChange={this.handleChange} required/>
+                        <label>{this.props.match.params.id !== 'new' ? "New password" : "Password"}:
+                            <input type="password" value={this.state.password} name="password" onChange={this.handleChange} disabled={ this.state.userRole === roles.USER || (this.props.userRole === roles.ADMINISTRATOR) || this.props.userName === this.state.username ? false : true}/>
                         </label> <br /><br />
                         <input type="submit" value="Save" disabled={!formValid}/>
                         <button type="reset" onClick={this.props.history.goBack}>Cancel</button>

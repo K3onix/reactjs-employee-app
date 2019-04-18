@@ -15,7 +15,7 @@ class UserProfile extends Component {
                     <li className="content-body"><span className="userListTag">Firstname:</span> <span className="userListValue">{this.props.user.firstName}</span></li>
                     <li className="content-body"><span className="userListTag">Lastname:</span> <span className="userListValue">{this.props.user.lastName}</span></li>
                     <li className="content-body"><span className="userListTag">E-Mail:</span> <span className="userListValue">{this.props.user.emailId}</span></li>
-                    <li className="content-body"><span className="userListTag">Role:</span> <span className="userListValue">{this.props.user.app_metadata.role}</span></li>
+                    <li className="content-body"><span className="userListTag">Role:</span> <span className="userListValue">{this.props.user.app_metadata.userRole}</span></li>
                 </ul>
             </div>
         </div>

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Redirect, NavLink} from 'react-router-dom';
 import './LogIn.css';
-import roles from '../../utils/Roles';
 
 const loginApi = "http://localhost:8080/login";
 
@@ -21,7 +20,7 @@ class LogIn extends Component {
       this.validateLogin = this.validateLogin.bind(this);
   }
 
-  async validateLogin(usrn, pswd) {
+  validateLogin(usrn, pswd) {
     fetch(loginApi,
     {
       mode: 'cors',
@@ -34,15 +33,8 @@ class LogIn extends Component {
       if(!response.ok) { 
         throw response; 
       };
-      const userObject = {
-        username: usrn,
-        firstName: "Firstname Placeholder",
-        lastName: "Lastname Placeholder",
-        emailId: "E-Mail Placeholder",
-        token: response.headers.get("Authorization"),
-        role: roles.ADMINISTRATOR
-      }
-      this.props.appSignIn(userObject);
+      const token = response.headers.get("Authorization");
+      this.props.appSignIn(usrn, token);
       this.setState({loginSuccess: true});
 
       }).catch((error) => {
@@ -69,7 +61,7 @@ class LogIn extends Component {
     });
   }
 
-  async handleLogin(event) {
+  handleLogin(event) {
     this.validateLogin(this.state.username, this.state.password);
     event.preventDefault();
   }
